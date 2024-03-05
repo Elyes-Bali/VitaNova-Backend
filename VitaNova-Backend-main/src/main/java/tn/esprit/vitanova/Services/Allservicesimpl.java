@@ -2,7 +2,6 @@ package tn.esprit.vitanova.Services;
 
 import tn.esprit.vitanova.entities.*;
 
-import javax.management.Notification;
 import java.util.List;
 
 public interface Allservicesimpl {
@@ -28,7 +27,10 @@ public interface Allservicesimpl {
     public void supprimerchat (Long idchat);
 
     public List<Client> cherchertousclient();
-
-
+    public Consultation addconsultation (Consultation consultation);
+     public void updateconsultation (Long id,Consultation consultation);
+     public Consultation showconsultation (Long idconsulation);
+     public List<Consultation> getallconsultation() ;
+    public void deleteconsultationbyid(Long id );
 }
 

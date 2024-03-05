@@ -11,7 +11,7 @@ import java.util.Date;
 public class Consultation implements Serializable {
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idConsultation ;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIME)
     private Date startTime;
     @Temporal(TemporalType.DATE)
     private Date consultationdate;

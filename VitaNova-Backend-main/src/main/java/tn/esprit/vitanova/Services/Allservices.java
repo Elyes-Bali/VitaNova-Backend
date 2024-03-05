@@ -16,6 +16,7 @@ public class Allservices implements Allservicesimpl{
     ChatRepo chatRepo;
     RapportPsyRepo rapportPsyRepo;
     ClientRepo cl;
+    ConsultationRepo cr;
     @Override
     public Psychologue ajouterPsychologue(Psychologue p) {
         return pr.save(p) ;
@@ -128,6 +129,32 @@ public class Allservices implements Allservicesimpl{
     @Override
     public List<Client> cherchertousclient() {
         return cl.findAll();
+    }
+
+    @Override
+    public Consultation addconsultation(Consultation consultation) {
+        return cr.save(consultation);
+    }
+
+    @Override
+    public void updateconsultation(Long id, Consultation consultation) {
+        consultation.setIdConsultation(id);
+        cr.save(consultation);
+    }
+
+    @Override
+    public Consultation showconsultation(Long idconsulation) {
+        return cr.findById(idconsulation).orElse(null);
+    }
+
+    @Override
+    public List<Consultation> getallconsultation() {
+        return cr.findAll();
+    }
+
+    @Override
+    public void deleteconsultationbyid(Long id) {
+        cr.deleteById(id);
     }
 
 
