@@ -28,7 +28,7 @@ public class RapportPsy implements Serializable {
     private Date dateRappPs;
 
 
-    @JsonIgnoreProperties({"chats", "rapportPsy", "notifications", "clients"})
+    @JsonIgnoreProperties({"chats", "notifications", "clients","rapportPsy"})
     @ManyToOne
     Psychologue psychologue;
     @JsonIgnoreProperties({"psychologue","rapportPsy"})

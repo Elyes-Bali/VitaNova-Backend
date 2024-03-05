@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,6 +24,6 @@ public Long clientId;
 
     @OneToOne (mappedBy = "client")
     private RapportPsy rapportPsy;
-
-
+    @OneToMany(cascade =CascadeType.ALL,mappedBy = "client")
+     private List<Consultation>consultations;
 }
