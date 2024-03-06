@@ -1,12 +1,19 @@
 package tn.esprit.vitanova.Services;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tn.esprit.vitanova.entities.*;
 import tn.esprit.vitanova.repository.*;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.chrono.ChronoLocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -17,6 +24,9 @@ public class Allservices implements Allservicesimpl{
     RapportPsyRepo rapportPsyRepo;
     ClientRepo cl;
     ConsultationRepo cr;
+
+
+
     @Override
     public Psychologue ajouterPsychologue(Psychologue p) {
         return pr.save(p) ;
@@ -156,6 +166,70 @@ public class Allservices implements Allservicesimpl{
     public void deleteconsultationbyid(Long id) {
         cr.deleteById(id);
     }
+    @Override
+    public Integer numberconsultation(Long psychologueId) {
+        Psychologue psychologue = pr.findById(psychologueId).orElse(null);
+
+        List<Consultation> consultations=psychologue.getConsultations();
+
+        LocalDate today = LocalDate.now();
+        List<Consultation> todaysConsultations = psychologue.getConsultations().stream()
+                .filter(consultation -> consultation.getConsultationdate().equals(today))
+                .collect(Collectors.toList());
+
+        return todaysConsultations.size();
+    }
 
 
-}
+
+    }
+
+
+//    public long countConsultationsPerDay(Long psychologueId) {
+//        Psychologue psychologue = pr.findById(psychologueId)
+//                .orElseThrow(() -> new EntityNotFoundException("Psychologue not found with id: " + psychologueId));
+//
+//        List<Consultation> consultations = psychologue.getConsultations();
+//
+//        LocalDate systemDate = LocalDate.now();
+//
+//        long result = consultations.stream()
+//                .filter(consultation -> {
+//                    Date consultationDate = consultation.getConsultationdate();
+//                    if (consultationDate != null) {
+//                        LocalDate dateFromConsultation = consultationDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//                        return dateFromConsultation.isEqual(systemDate);
+//                    }
+//                    return false;
+//                })
+//                .count();
+//
+//        System.out.println("Total consultations per day: " + result);
+//
+//        return result;
+//
+
+
+
+//    public long countConsultationsPerWeek(Long psychologueId, LocalDate date) {
+//        Psychologue psychologue = pr.findById(psychologueId)
+//                .orElseThrow(() -> new EntityNotFoundException("Psychologue not found with id: " + psychologueId));
+//
+//        long result = psychologue.countConsultationsPerWeek(date);
+//        System.out.println("Consultations per week: " + result);
+//
+//        return result;
+//    }
+//
+//    public long countConsultationsPerMonth(Long psychologueId, LocalDate date) {
+//        Psychologue psychologue = pr.findById(psychologueId)
+//                .orElseThrow(() -> new EntityNotFoundException("Psychologue not found with id: " + psychologueId));
+//
+//        long result = psychologue.countConsultationsPerMonth(date);
+//        System.out.println("Consultations per month: " + result);
+//
+//        return result;
+//    }
+
+
+

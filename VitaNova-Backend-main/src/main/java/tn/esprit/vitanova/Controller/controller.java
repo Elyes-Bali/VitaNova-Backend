@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.vitanova.Services.Allservices;
 import tn.esprit.vitanova.entities.*;
 
+import java.time.LocalDate;
 import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -87,7 +88,25 @@ public class controller {
     public List<Client> cherchertousclient(){
         return allservices.cherchertousclient();
     }
+    @PostMapping("/consultation/addconsultation")
+    public Consultation addconsultation(@RequestBody Consultation consultation){return allservices.addconsultation(consultation);}
+    @PutMapping("/consultation/updateconsultation/{id}")
+    public void updateconsultation(@PathVariable Long id, @RequestBody Consultation consultation){
+        allservices.updateconsultation(id,consultation);
 
+    }
+    @GetMapping("/consultation/getall")
+            public List<Consultation> getallconsultation(){
+        return allservices.getallconsultation();}
+    @GetMapping("/consultation/getconsultationyid/{idconsulation}")
+    public Consultation showconsultation(@PathVariable Long idconsulation){return allservices.showconsultation(idconsulation);}
+    @DeleteMapping("/consultation/deleteconsultation/{id}")
+    public void deleteconsultationbyid(@PathVariable Long id){allservices.deleteconsultationbyid(id);}
+    @GetMapping("/countPerDay/{psychologueId}")
+    public Integer numberconsultation(@PathVariable Long psychologueId) {
+
+        return allservices.numberconsultation(psychologueId);
+    }
 }
 
 

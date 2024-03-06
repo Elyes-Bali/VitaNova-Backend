@@ -32,5 +32,6 @@ public interface Allservicesimpl {
      public Consultation showconsultation (Long idconsulation);
      public List<Consultation> getallconsultation() ;
     public void deleteconsultationbyid(Long id );
+    public Integer numberconsultation(Long psychologueId);
 }
 

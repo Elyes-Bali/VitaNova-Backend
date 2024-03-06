@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 
 @Entity
@@ -11,10 +13,10 @@ import java.util.Date;
 public class Consultation implements Serializable {
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idConsultation ;
-    @Temporal(TemporalType.TIME)
-    private Date startTime;
+
+    private LocalTime startTime;
     @Temporal(TemporalType.DATE)
-    private Date consultationdate;
+    private LocalDate consultationdate;
     @ManyToOne
     Psychologue psychologue;
     @ManyToOne
