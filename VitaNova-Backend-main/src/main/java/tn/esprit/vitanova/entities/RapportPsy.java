@@ -1,6 +1,5 @@
 package tn.esprit.vitanova.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +25,7 @@ public class RapportPsy implements Serializable {
     private String description;
     @Temporal(TemporalType.DATE)
     private Date dateRappPs;
+
 
 
     @JsonIgnoreProperties({"chats", "notifications", "clients","rapportPsy"})

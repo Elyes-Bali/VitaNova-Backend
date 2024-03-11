@@ -1,18 +1,25 @@
 package tn.esprit.vitanova.Services;
 
-import jakarta.persistence.EntityNotFoundException;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
 import tn.esprit.vitanova.entities.*;
 import tn.esprit.vitanova.repository.*;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.chrono.ChronoLocalDate;
-import java.util.Date;
+import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
@@ -24,6 +31,8 @@ public class Allservices implements Allservicesimpl{
     RapportPsyRepo rapportPsyRepo;
     ClientRepo cl;
     ConsultationRepo cr;
+    TemplateEngine templateEngine;
+
 
 
 
@@ -91,8 +100,10 @@ public class Allservices implements Allservicesimpl{
     public void updatenotification(Long idnotification, Notifications notification) {
      notification.setIdNotifications(idnotification);
      np.save(notification);
+     
 
     }
+
 
     @Override
     public Notifications getnotificationbyId(Long idnotication) {
@@ -179,10 +190,51 @@ public class Allservices implements Allservicesimpl{
 
         return todaysConsultations.size();
     }
+    public Integer numberConsultationPerMonth(Long psychologueId, YearMonth yearMonth) {
+        Psychologue psychologue = pr.findById(psychologueId).orElse(null);
 
+        if (psychologue == null) {
+            return 0; // Handle the case where the Psychologue is not found
+        }
+
+        List<Consultation> consultations = psychologue.getConsultations();
+
+        List<Consultation> consultationsInMonth = psychologue.getConsultations().stream()
+                .filter(consultation -> {
+                    LocalDate consultationDate = consultation.getConsultationdate();
+                    return consultationDate.getMonth() == yearMonth.getMonth() && consultationDate.getYear() == yearMonth.getYear();
+                })
+                .collect(Collectors.toList());
+
+        return consultationsInMonth.size();
+    }
+    public void generatePdf(Long rapportPsyId) {
+        Optional<RapportPsy> rapportPsyOptional = rapportPsyRepo.findById(rapportPsyId);
+        if (rapportPsyOptional.isPresent()) {
+            RapportPsy rapportPsy = rapportPsyOptional.get();
+            try {
+                Document document = new Document();
+                PdfWriter.getInstance(document, new FileOutputStream("rapport_psy.pdf"));
+                document.open();
+
+                // Add content to the PDF
+                document.add(new Paragraph("Rapport Psy"));
+                document.add(new Paragraph("Description: " + rapportPsy.getDescription()));
+                document.add(new Paragraph("Date: " + rapportPsy.getDateRappPs()));
+
+                document.close();
+            } catch (DocumentException | IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            throw new IllegalArgumentException("RapportPsy not found with ID: " + rapportPsyId);
+        }
+    }
 
 
     }
+
+
 
 
 //    public long countConsultationsPerDay(Long psychologueId) {

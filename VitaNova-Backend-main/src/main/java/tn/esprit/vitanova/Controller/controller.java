@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.vitanova.Services.Allservices;
 import tn.esprit.vitanova.entities.*;
 
-import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
 import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -106,6 +107,19 @@ public class controller {
     public Integer numberconsultation(@PathVariable Long psychologueId) {
 
         return allservices.numberconsultation(psychologueId);
+    }
+    @GetMapping("/consultation/{psychologueId}/{year}/{month}")
+    public Integer numberConsultationPerMonth(  @PathVariable Long psychologueId,
+                                              @PathVariable int year,
+                                              @PathVariable String month
+    ) {
+        Month monthEnum = Month.valueOf(month.toUpperCase());
+        return  allservices.numberConsultationPerMonth(psychologueId,YearMonth.of(year, monthEnum));
+    }
+    @GetMapping("/generate-pdf/{rapportPsyId}")
+    public String generatePdf(@PathVariable Long rapportPsyId) {
+        allservices.generatePdf(rapportPsyId);
+        return "PDF generated successfully";
     }
 }
 

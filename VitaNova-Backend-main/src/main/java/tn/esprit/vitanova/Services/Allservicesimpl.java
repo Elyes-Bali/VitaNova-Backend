@@ -33,5 +33,7 @@ public interface Allservicesimpl {
      public List<Consultation> getallconsultation() ;
     public void deleteconsultationbyid(Long id );
     public Integer numberconsultation(Long psychologueId);
+    public void generatePdf(Long rapportPsyId);
+
 }
 
