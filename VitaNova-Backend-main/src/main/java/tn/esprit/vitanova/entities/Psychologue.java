@@ -25,7 +25,7 @@ public class Psychologue implements Serializable {
             (cascade = CascadeType.ALL , mappedBy= "psychologue")
     private Set<Chat> chats;
 
-
+    @JsonIgnore
     @OneToMany( mappedBy= "psychologue",cascade = CascadeType.ALL)
     private List<RapportPsy> rapportPsy;
     @JsonIgnore
@@ -35,6 +35,7 @@ public class Psychologue implements Serializable {
     @OneToMany
             (cascade = CascadeType.ALL , mappedBy= "psychologue")
     private List<Client> clients;
+    @JsonIgnore
     @OneToMany (cascade =CascadeType.ALL,mappedBy = "psychologue")
     private List<Consultation> consultations;
 }

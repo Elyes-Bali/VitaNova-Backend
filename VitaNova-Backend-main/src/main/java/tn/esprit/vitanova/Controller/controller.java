@@ -1,13 +1,18 @@
 package tn.esprit.vitanova.Controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.vitanova.Services.Allservices;
 import tn.esprit.vitanova.entities.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Month;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Map;
+
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @AllArgsConstructor
@@ -121,6 +126,33 @@ public class controller {
         allservices.generatePdf(rapportPsyId);
         return "PDF generated successfully";
     }
+    @GetMapping("/consultations/{psychologueId}/{year}/{month}")
+    public Map<LocalDate, Integer> consultationsPerDayInMonth(
+            @PathVariable Long psychologueId,
+            @PathVariable int year,
+            @PathVariable String month
+    ) {Month monthEnum = Month.valueOf(month.toUpperCase());
+        YearMonth yearMonth = YearMonth.of(year, monthEnum);
+        return allservices.consultationsPerDayInMonth(psychologueId, yearMonth);
+    }
+    @GetMapping("/check-consultation-slot/{date}/{startTime}/{psychologistId}")
+    public Integer isConsultationSlotAvailable(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
+            @PathVariable Long psychologistId) {
+
+        return allservices.isConsultationSlotAvailable(date,startTime,psychologistId);
+    }
+    @GetMapping("/ab/{date}/{startTime}/{psychologistId}")
+    public List<Consultation> con(
+        @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+        @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
+        @PathVariable Long psychologistId) {
+
+            return allservices.con(date,startTime,psychologistId);
+    }
+
+
 }
 
 

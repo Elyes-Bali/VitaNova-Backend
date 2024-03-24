@@ -15,9 +15,9 @@ import tn.esprit.vitanova.repository.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.YearMonth;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -154,7 +154,18 @@ public class Allservices implements Allservicesimpl{
 
     @Override
     public Consultation addconsultation(Consultation consultation) {
-        return cr.save(consultation);
+        if (consultation.getPsychologue() != null) {
+            Integer test = isConsultationSlotAvailable(consultation.getConsultationdate(), consultation.getStartTime(), consultation.getPsychologue().getPsychologueId());
+            if (test == 0) {
+                return cr.save(consultation);
+            } else {
+                // Handle the case where consultation slot is not available
+                throw new IllegalArgumentException("Consultation slot is not available. Cannot add consultation.");
+            }
+        } else {
+            // Handle the case where psychologue is null
+            throw new IllegalArgumentException("Psychologue is null. Cannot add consultation.");
+        }
     }
 
     @Override
@@ -230,9 +241,72 @@ public class Allservices implements Allservicesimpl{
             throw new IllegalArgumentException("RapportPsy not found with ID: " + rapportPsyId);
         }
     }
+    public Map<LocalDate, Integer> consultationsPerDayInMonth(Long psychologueId, YearMonth yearMonth) {
+        Psychologue psychologue = pr.findById(psychologueId).orElse(null);
 
+        if (psychologue == null) {
+            return new HashMap<>(); // Handle the case where the Psychologue is not found
+        }
+
+        List<Consultation> consultations = psychologue.getConsultations();
+
+        Map<LocalDate, Integer> consultationsPerDay = consultations.stream()
+                .filter(consultation -> {
+                    LocalDate consultationDate = consultation.getConsultationdate();
+                    return consultationDate.getMonth() == yearMonth.getMonth() && consultationDate.getYear() == yearMonth.getYear();
+                })
+                .collect(Collectors.groupingBy(Consultation::getConsultationdate, Collectors.collectingAndThen(Collectors.toList(), List::size)));
+
+        // Fill in days with zero consultations
+        LocalDate firstDayOfMonth = yearMonth.atDay(1);
+        LocalDate lastDayOfMonth = yearMonth.atEndOfMonth();
+        while (!firstDayOfMonth.isAfter(lastDayOfMonth)) {
+            consultationsPerDay.putIfAbsent(firstDayOfMonth, 0);
+            firstDayOfMonth = firstDayOfMonth.plusDays(1);
+        }
+
+        return consultationsPerDay;
+    }
+    public Integer isConsultationSlotAvailable(LocalDate date, LocalTime debut, Long psychologueid) {
+        // Calculate the end time by adding one hour to the start time
+
+        LocalTime endTime = debut.plusHours(1);
+
+        // Retrieve existing consultations for the selected date and psychologist
+        List<Consultation> consultations = cr.findByConsultationdateAndPsychologueId(date,psychologueid);
+        List<Consultation> con = new ArrayList<>();
+        // Check if the new consultation overlaps with any existing consultations
+        for (Consultation consultation : consultations) {
+            LocalTime existingStartTime = consultation.getStartTime().plusHours(1);
+            LocalTime existingEndTime = existingStartTime;
+
+            if ((existingStartTime.isBefore(endTime) && existingEndTime.isAfter(debut)) ||
+                    (existingStartTime.equals(debut) && existingEndTime.isAfter(debut)) ||
+                    (existingStartTime.isBefore(endTime) && existingEndTime.equals(endTime)))  {
+                con.add(consultation);
+            }
+
+
+        }
+        return con.size();
+
+        // Slot does not overlap with any existing consultation for the psychologist
 
     }
+    public List<Consultation> con(LocalDate date, LocalTime startTime, Long psychologueid) {
+        // Calculate the end time by adding one hour to the start time
+
+        LocalTime endTime = startTime.plusHours(1);
+
+        // Retrieve existing consultations for the selected date and psychologist
+        List<Consultation> consultations = cr.findByConsultationdateAndPsychologueId(date,psychologueid);
+
+        // Check if the new consultation overlaps with any existing consultations
+
+        return  consultations;
+
+
+    }}
 
 
 

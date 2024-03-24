@@ -2,6 +2,8 @@ package tn.esprit.vitanova.Services;
 
 import tn.esprit.vitanova.entities.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface Allservicesimpl {
@@ -34,6 +36,7 @@ public interface Allservicesimpl {
     public void deleteconsultationbyid(Long id );
     public Integer numberconsultation(Long psychologueId);
     public void generatePdf(Long rapportPsyId);
-
+    public Integer isConsultationSlotAvailable(LocalDate date, LocalTime startTime, Long psychologueid);
+    public List<Consultation> con(LocalDate date, LocalTime startTime, Long psychologueid);
 }
 
