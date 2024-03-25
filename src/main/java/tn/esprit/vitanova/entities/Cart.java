@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -19,7 +20,10 @@ public class Cart implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idCart")
     private Long idCart; // Clé primaire
-    private Long OwnerId;
-    private String Products;
-    private Long Quantity;
+    private Long ownerId;
+    private String products;
+    private Long quantity;
+    private Long total;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy="cart")
+    private Set<Products>prods;
 }

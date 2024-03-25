@@ -34,6 +34,7 @@ public class User implements Serializable {
     private String role;
     @Temporal(TemporalType.DATE)
     private Date dateNaissance;
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    private Set<Reservation> reservation;
+    @OneToMany(cascade = CascadeType.ALL)
+   private Set<Products> products;
+
 }

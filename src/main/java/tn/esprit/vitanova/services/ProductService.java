@@ -40,4 +40,14 @@ public class ProductService implements IProductservice{
     public void supprimerproducts(Long idProducts) {
     productRepo.deleteById(idProducts);
     }
+
+    @Override
+    public Products getproductId(Long idProducts) {
+        return productRepo.findById(idProducts).orElse(null);
+    }
+
+    @Override
+    public List<Products> getChartData(String metric) {
+        return null;
+    }
 }
