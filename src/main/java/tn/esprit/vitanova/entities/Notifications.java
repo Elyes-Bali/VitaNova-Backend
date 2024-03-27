@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -14,11 +15,15 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table( name = "Notifications")
-public class Notifications implements Serializable {
+public class  Notifications implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idNotifications")
     private Long idNotifications; // Clé primaire
     private Long DestinatorId;
     private String ContentNot;
+
+    ////relation user
+    @ManyToMany(cascade = CascadeType.ALL)
+    private Set<User>User;
 }

@@ -26,4 +26,11 @@ public class PremuimV implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date StartingDate;
     private Long Price;
+
+    @OneToOne(mappedBy = "PremuimV")
+    private User User;
+
+    @OneToOne
+    private PaymentV PaymentV;
+
 }

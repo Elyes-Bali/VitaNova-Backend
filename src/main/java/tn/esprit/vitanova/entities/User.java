@@ -79,5 +79,17 @@ public class User implements Serializable{
         this.email = email;
         this.password = password;
     }
+    ////relation journal
+@OneToMany(cascade = CascadeType.ALL,mappedBy = "User")
+    private Set<Products> Products;
+    @OneToOne
+    private Jornals Jornals;
+    //// notification
+    @ManyToMany(mappedBy = "User",
+    cascade = CascadeType.ALL)
+    private Set<Notifications>Notifications;
 
+    ///premuimv
+    @OneToOne
+    private PremuimV PremuimV;
 }

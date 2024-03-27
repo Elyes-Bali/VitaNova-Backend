@@ -23,4 +23,7 @@ public class Products implements Serializable {
     private String TypeProd;
     private Long Price;
     private String DescriptionP;
+
+    @ManyToOne
+    User User;
 }

@@ -24,4 +24,7 @@ public class PaymentV implements Serializable {
     private Long TotalPrice;
     private String Object;
 
+    @OneToOne(mappedBy = "PaymentV")
+    private PremuimV  PremuimV;
+
 }
