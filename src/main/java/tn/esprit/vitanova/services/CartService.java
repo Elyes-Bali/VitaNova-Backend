@@ -16,8 +16,11 @@ public class CartService implements ICartService{
     CartRepo cartRepo;
     UserRepo userRepo;
 
+   
+
     @Override
-    public Cart ajouterCart(Cart c) {
+    public Cart ajouterCart(Long ownerId, Cart c) {
+        c.setOwnerId(ownerId);
         return cartRepo.save(c);
     }
 
@@ -45,5 +48,10 @@ public class CartService implements ICartService{
     @Override
     public Cart getCartId(Long idCart) {
         return cartRepo.findById(idCart).orElse(null);
+    }
+
+    @Override
+    public List<Cart> getCartByOwnerId(Long ownerId) {
+        return cartRepo.findByOwnerId(ownerId);
     }
 }

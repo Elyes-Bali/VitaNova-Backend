@@ -15,9 +15,9 @@ import java.util.List;
 public class CartController {
     ICartService iCartService;
 
-    @PostMapping("/addtocart")
-    public Cart ajouterCart(@RequestBody Cart c) {
-        return iCartService.ajouterCart(c) ;
+    @PostMapping("/addtocart/{ownerId}")
+    public Cart ajouterCart(@PathVariable Long ownerId,@RequestBody Cart c) {
+        return iCartService.ajouterCart(ownerId,c) ;
     }
 
     @PutMapping("/updatecart/{idProducts}")
@@ -40,6 +40,11 @@ public class CartController {
     @GetMapping("/getCartId/{idCart}")
     public Cart getCartId(@PathVariable Long idCart){
         return iCartService.getCartId(idCart);
+    }
+
+    @GetMapping("/getCartByOwnerId/{ownerId}")
+    public List<Cart> getCartByOwnerId(@PathVariable Long ownerId) {
+        return iCartService.getCartByOwnerId(ownerId);
     }
 
 }
