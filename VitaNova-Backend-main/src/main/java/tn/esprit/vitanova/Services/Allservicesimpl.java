@@ -38,5 +38,10 @@ public interface Allservicesimpl {
     public void generatePdf(Long rapportPsyId);
     public Integer isConsultationSlotAvailable(LocalDate date, LocalTime startTime, Long psychologueid);
     public List<Consultation> con(LocalDate date, LocalTime startTime, Long psychologueid);
+
+    public List<Question> allquestion();
+    public Answers getAnswerByQuestionId(Long questionId);
+   //public List<String> recommendPsychologists(String genderPreference, char specializeDepression,
+                                              // char specializeRelationship, char specializeAnxiety);
 }
 

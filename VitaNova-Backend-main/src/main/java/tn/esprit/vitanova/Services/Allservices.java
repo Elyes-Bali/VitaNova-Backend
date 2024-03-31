@@ -14,6 +14,7 @@ import tn.esprit.vitanova.repository.*;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.YearMonth;
@@ -32,6 +33,8 @@ public class Allservices implements Allservicesimpl{
     ClientRepo cl;
     ConsultationRepo cr;
     TemplateEngine templateEngine;
+    QuestionRrepo qr;
+    AnswersRepo an;
 
 
 
@@ -160,7 +163,8 @@ public class Allservices implements Allservicesimpl{
                 return cr.save(consultation);
             } else {
                 // Handle the case where consultation slot is not available
-                throw new IllegalArgumentException("Consultation slot is not available. Cannot add consultation.");
+                System.out.println("shiit ");
+                return null;
             }
         } else {
             // Handle the case where psychologue is null
@@ -290,9 +294,45 @@ public class Allservices implements Allservicesimpl{
         }
         return con.size();
 
+
         // Slot does not overlap with any existing consultation for the psychologist
 
     }
+    /////
+    public List<LocalTime> getAvailableConsultationSlots(LocalDate date, Long psychologueid) {
+        // Assuming working hours are from 9 AM to 5 PM
+        LocalTime startTime = LocalTime.of(9, 0);
+        LocalTime endTime = LocalTime.of(17, 0);
+
+        // Initial slot start time
+        LocalTime slotStartTime = startTime;
+
+        // Duration for each consultation slot (1 hour)
+        Duration slotDuration = Duration.ofHours(1);
+
+        List<LocalTime> availableSlots = new ArrayList<>();
+
+        // Fetch existing consultation start times for the given date and psychologist
+        List<LocalTime> existingConsultationStartTimes = cr.findStartTimesByDateAndPsychologueId(date, psychologueid);
+
+        for (LocalTime existingStartTime : existingConsultationStartTimes) {
+            // Adjust slot start time if it overlaps with an existing consultation
+            if (slotStartTime.isBefore(existingStartTime)) {
+                // There is an available slot before the existing consultation
+                availableSlots.add(slotStartTime);
+            }
+            slotStartTime = existingStartTime.plusHours(1); // Move slot start time to the end of this consultation
+        }
+
+        // Add the last available slot if there's any remaining time in the day
+        if (slotStartTime.isBefore(endTime)) {
+            availableSlots.add(slotStartTime);
+        }
+
+        return availableSlots;
+    }
+
+    //////
     public List<Consultation> con(LocalDate date, LocalTime startTime, Long psychologueid) {
         // Calculate the end time by adding one hour to the start time
 
@@ -306,7 +346,73 @@ public class Allservices implements Allservicesimpl{
         return  consultations;
 
 
-    }}
+    }
+
+    @Override
+    public List<Question> allquestion() {
+        return qr.findAll();
+    }
+
+    @Override
+    public Answers getAnswerByQuestionId(Long questionId) {
+        Question question = qr.findById(questionId)
+                .orElseThrow(() -> new RuntimeException("Question not found with id: " + questionId));
+
+        // Get the associated answer
+        Answers answer = question.getAnswer();
+
+        if (answer != null) {
+            return answer;
+        } else {
+            return null;
+        }
+    }
+
+
+//        public List<String> recommendPsychologists(String genderPreference, char specializeDepression,
+//                                                   char specializeRelationship, char specializeAnxiety) {
+//            // Example list of psychologists (replace with your actual data)
+//            List<Psychologue> psychologists = new ArrayList<>();
+//
+//            List<String> recommendedPsychologists = new ArrayList<>();
+//
+//            // Iterate over each psychologist
+//            for (Psychologue psychologist : psychologists) {
+//                // Check gender preference
+//                if (!"none".equals(genderPreference) && !psychologist.getGender().equalsIgnoreCase(genderPreference)){
+//                    // If the user has specified a gender preference and the psychologist's gender does not match,
+//                    // skip to the next psychologist
+//                    continue;
+//                }
+//
+//                // Check specialties based on user's preferences
+//                if (specializeDepression == 'Y' && !psychologist.getSpecialty().equals("Depression")) {
+//                    // If the user is interested in depression specialty and the psychologist doesn't specialize in it,
+//                    // skip to the next psychologist
+//                    continue;
+//                }
+//
+//                if (specializeRelationship == 'Y' && !psychologist.getSpecialty().equals("Relationship")) {
+//                    // If the user is interested in relationship issues specialty and the psychologist doesn't specialize in it,
+//                    // skip to the next psychologist
+//                    continue;
+//                }
+//
+//                if (specializeAnxiety == 'Y' && !psychologist.getSpecialty().equals("Anxiety")) {
+//                    // If the user is interested in anxiety specialty and the psychologist doesn't specialize in it,
+//                    // skip to the next psychologist
+//                    continue;
+//                }
+//
+//                // If all criteria are met, add the psychologist to the list of recommended psychologists
+//                recommendedPsychologists.add(psychologist.getNom());
+//            }
+//
+//            // Return the list of recommended psychologists
+//            return recommendedPsychologists;
+//        }
+    }
+
 
 
 

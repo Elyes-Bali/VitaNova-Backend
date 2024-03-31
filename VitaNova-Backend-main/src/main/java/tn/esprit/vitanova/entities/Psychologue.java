@@ -20,6 +20,9 @@ public class Psychologue implements Serializable {
     private String prenom;
     private String email;
     private String phonenumber;
+    @Enumerated(EnumType.STRING)
+    private Specialty specialty;
+    private String gender;
     @JsonIgnore
     @OneToMany
             (cascade = CascadeType.ALL , mappedBy= "psychologue")

@@ -151,8 +151,31 @@ public class controller {
 
             return allservices.con(date,startTime,psychologistId);
     }
+    @GetMapping("/answers/{questionId}")
+    public Answers getAnswerByQuestionId(@PathVariable Long questionId){
+        return allservices.getAnswerByQuestionId(questionId);
+    }
+    @GetMapping("/questions/getall")
+    public List<Question> allquestion() {
+        return allservices.allquestion();
+    }
+//    @PostMapping("/recommend-psychologists")
+//    public List<String> recommendPsychologists(@RequestBody PsychologistRecommendationRequest request) {
+//        return allservices.recommendPsychologists(
+//                request.getGenderPreference(),
+//                request.isSpecializeDepression() ? 'Y' : 'N',
+//                request.isSpecializeRelationship() ? 'Y' : 'N',
+//                request.isSpecializeAnxiety() ? 'Y' : 'N'
+//        );
+//    }
+///////
 
-
+    @GetMapping("/consultation/slots/{date}/{psychologueid}")
+    public List<LocalTime> getAvailableConsultationSlots(
+            @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @PathVariable("psychologueid") Long psychologueId) {
+        return allservices.getAvailableConsultationSlots(date, psychologueId);
+    }
 }
 
 
