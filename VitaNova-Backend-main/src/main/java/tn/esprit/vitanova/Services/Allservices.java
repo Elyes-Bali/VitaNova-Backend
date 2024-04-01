@@ -38,7 +38,6 @@ public class Allservices implements Allservicesimpl{
 
 
 
-
     @Override
     public Psychologue ajouterPsychologue(Psychologue p) {
         return pr.save(p) ;
@@ -366,6 +365,7 @@ public class Allservices implements Allservicesimpl{
         } else {
             return null;
         }
+
     }
 
 
