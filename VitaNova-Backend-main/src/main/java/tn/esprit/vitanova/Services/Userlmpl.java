@@ -3,6 +3,7 @@ package tn.esprit.vitanova.Services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import tn.esprit.vitanova.entities.ERole;
 import tn.esprit.vitanova.entities.User;
 import tn.esprit.vitanova.repository.RoleRepo;
 import tn.esprit.vitanova.repository.UserRepo;
@@ -73,5 +74,11 @@ public class Userlmpl implements UserService {
     public long countBannedUsers() {
         return userRepo.countByBannedTrue();
     }
+
+    @Override
+    public List<User> getUsersWithPsychiatristSpecialty() {
+        return userRepo.findByRolesName(ERole.ROLE_PSYCOLOGIST);
+    }
+
 
 }

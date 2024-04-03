@@ -2,6 +2,7 @@ package tn.esprit.vitanova.Controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.vitanova.Services.Allservices;
 import tn.esprit.vitanova.entities.*;
@@ -176,6 +177,12 @@ public class controller {
             @PathVariable("psychologueid") Long psychologueId) {
         return allservices.getAvailableConsultationSlots(date, psychologueId);
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Consultation>> getConsultationsByUserId(@PathVariable Long userId) {
+        List<Consultation> consultations = allservices.getConsultationsByUserId(userId);
+        return ResponseEntity.ok(consultations);
+    }
+
 }
 
 

@@ -43,5 +43,7 @@ public interface Allservicesimpl {
     public Answers getAnswerByQuestionId(Long questionId);
    //public List<String> recommendPsychologists(String genderPreference, char specializeDepression,
                                               // char specializeRelationship, char specializeAnxiety);
+
+    public List<Consultation> getConsultationsByUserId(Long userId) ;
 }
 

@@ -1,5 +1,6 @@
 package tn.esprit.vitanova.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
@@ -81,4 +83,11 @@ import java.util.Set;
             this.password = password;
         }
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "psychiatrist", cascade = CascadeType.ALL)
+    private List<Consultation> consultationsAsPsychiatrist;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<Consultation> consultationsAsClient;
     }

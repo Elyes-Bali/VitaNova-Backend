@@ -2,8 +2,10 @@ package tn.esprit.vitanova.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import tn.esprit.vitanova.entities.ERole;
 import tn.esprit.vitanova.entities.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,5 +27,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     Boolean existsByUsername(String username);
 
-    Boolean existsByEmail(String email);}
+    Boolean existsByEmail(String email);
+    List<User> findByRolesName(ERole roleName);
+}
 

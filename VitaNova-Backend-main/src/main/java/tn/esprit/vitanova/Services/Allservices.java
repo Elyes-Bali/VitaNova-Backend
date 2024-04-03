@@ -233,6 +233,9 @@ public class Allservices implements Allservicesimpl{
 
                 // Add content to the PDF
                 document.add(new Paragraph("Rapport Psy"));
+                document.add(new Paragraph("psychologue: " + rapportPsy.getPsychologue().getNom()));
+
+                document.add(new Paragraph("client: " + rapportPsy.getClient().getNom()));
                 document.add(new Paragraph("Description: " + rapportPsy.getDescription()));
                 document.add(new Paragraph("Date: " + rapportPsy.getDateRappPs()));
 
@@ -366,6 +369,11 @@ public class Allservices implements Allservicesimpl{
             return null;
         }
 
+    }
+
+    @Override
+    public List<Consultation> getConsultationsByUserId(Long userId) {
+        return cr.findByClientId(userId);
     }
 
 

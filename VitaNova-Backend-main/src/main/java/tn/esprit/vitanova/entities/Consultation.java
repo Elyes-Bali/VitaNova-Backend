@@ -1,5 +1,6 @@
 package tn.esprit.vitanova.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -20,9 +21,14 @@ public class Consultation implements Serializable {
     @JsonIgnoreProperties({"chats", "notifications", "clients","rapportPsy","consultations"})
     @ManyToOne
     Psychologue psychologue;
-    @JsonIgnoreProperties({"psychologue","rapportPsy","consultations"})
+
+    @JsonIgnore
     @ManyToOne
-    Client client;
+    @JoinColumn(name = "psychiatrist_id")
+    private User psychiatrist;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id")
+    private User client;
 
 
 }

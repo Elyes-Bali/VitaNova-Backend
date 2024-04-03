@@ -51,4 +51,9 @@ public class UserController {
         long count = userService.countBannedUsers();
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
+    @GetMapping("/psy")
+    public ResponseEntity<List<User>> getUsersWithPsychiatristSpecialty() {
+        List<User> psychiatrists = userService.getUsersWithPsychiatristSpecialty();
+        return ResponseEntity.ok(psychiatrists);
+    }
 }

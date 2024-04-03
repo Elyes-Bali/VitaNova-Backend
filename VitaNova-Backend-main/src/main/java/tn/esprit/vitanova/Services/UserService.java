@@ -17,4 +17,5 @@ public interface UserService {
     String banUser(Long id);
 
     long countBannedUsers();
+    public List<User> getUsersWithPsychiatristSpecialty();
 }
