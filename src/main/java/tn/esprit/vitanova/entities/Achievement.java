@@ -1,5 +1,6 @@
 package tn.esprit.vitanova.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class Achievement {
     private int criteria;
 
     @ManyToMany(mappedBy = "achievements")
+    @JsonIgnore
     private Set<User> users = new LinkedHashSet<>();
 
 }

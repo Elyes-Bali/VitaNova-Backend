@@ -1,8 +1,10 @@
 package tn.esprit.vitanova.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -20,11 +22,16 @@ public class Recepies implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idRecepies")
     private Long idRecepies; // Clé primaire
+    private Date datePreparation;
+    private Date dateAdded;
     @Column(length = 1000) // Définir une taille de colonne de 1000 caractères pour la description
     private String description;
 
+
     private String images;
 
+    @Column(length = 1000) // Définir une taille de colonne de 1000 caractères pour la description
+    private String name;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "recipes_ingredients",

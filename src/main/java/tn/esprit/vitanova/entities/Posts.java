@@ -3,8 +3,11 @@ package tn.esprit.vitanova.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -14,11 +17,17 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table( name = "Posts")
+@EntityListeners(AuditingEntityListener.class)
 public class Posts implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idPosts")
     private Long idPosts; // Clé primaire
+
+    @CreatedDate
+    @Column(name = "createdDate", nullable = false, updatable = false)
+    private Date createdDate;
+
     private String Post;
     private String ImageP;
     private String Description;
@@ -28,9 +37,5 @@ public class Posts implements Serializable {
     @JoinColumn(name = "community_id_community")
     @JsonIgnore
     private Community community;
-
-    @OneToMany(mappedBy = "posts", orphanRemoval = true)
-    @JsonIgnore
-    private Set<Comments> comments = new LinkedHashSet<>();
 
 }

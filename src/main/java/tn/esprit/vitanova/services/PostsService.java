@@ -1,11 +1,15 @@
 package tn.esprit.vitanova.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import tn.esprit.vitanova.entities.Community;
 import tn.esprit.vitanova.entities.Posts;
+import tn.esprit.vitanova.entities.User;
 import tn.esprit.vitanova.repository.CommunityRepository;
 import tn.esprit.vitanova.repository.PostsRepository;
+import tn.esprit.vitanova.repository.UserRepo;
+import tn.esprit.vitanova.security.services.UserDetailsImpl;
 
 import java.util.List;
 
@@ -15,11 +19,16 @@ public class PostsService implements IPostsService {
 
     private final CommunityRepository communityRepository;
     private final PostsRepository postsRepository;
+    private final UserRepo userRepo;
 
     @Override
     public Posts addNewPost(Posts post, Long communityId) {
+        UserDetailsImpl connectedPrincipal = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepo.findByUsername(connectedPrincipal.getUsername()).orElseThrow(NullPointerException::new);
+
         Community community = communityRepository.findById(communityId).orElseThrow(NullPointerException::new);
         post.setCommunity(community);
+        post.setIdOwner(user.getId());
         return postsRepository.save(post);
     }
 
@@ -39,7 +48,7 @@ public class PostsService implements IPostsService {
 
     @Override
     public List<Posts> getCommunityPosts(Long communityId) {
-        return postsRepository.findByCommunity_IdCommunity(communityId);
+        return postsRepository.findByCommunity_IdCommunityOrderByCreatedDateDesc(communityId);
     }
 
     @Override

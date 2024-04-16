@@ -12,10 +12,8 @@ import tn.esprit.vitanova.repository.IngredientsRepository;
 import tn.esprit.vitanova.repository.RecepiesRepository;
 import jakarta.persistence.EntityManager;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class RecepiesService  implements IRecepiesService  {
@@ -36,6 +34,11 @@ public class RecepiesService  implements IRecepiesService  {
     public Recepies addRecipe(RecipeDto recipeDto) {
         Recepies recipe = new Recepies();
         recipe.setDescription(recipeDto.getDescription());
+        recipe.setName(recipeDto.getName());
+        recipe.setDateAdded(recipeDto.getDateAdded());
+        recipe.setDatePreparation(recipeDto.getDatePreparation());
+
+
         recipe.setImages(recipeDto.getImages());
 
         Set<Ingredients> ingredients = new HashSet<>();
@@ -93,5 +96,36 @@ public class RecepiesService  implements IRecepiesService  {
             // Par exemple, vous pouvez lever une exception ou enregistrer un message d'erreur
         }
     }
+    public double calculateAveragePreparationTime() {
+        List<Recepies> recipes = recipesRepository.findAll();
+        double totalTime = recipes.stream()
+                .mapToLong(recipe -> recipe.getDatePreparation().getTime())
+                .sum();
+        return recipes.size() > 0 ? totalTime / recipes.size() : 0;
+    }
+    public List<Object[]> findMostPopularIngredients() {
+        return recipesRepository.findMostPopularIngredients();
+    }
 
+    public long getRecipeCountsForInterval(Date startDate, Date endDate) {
+        return recipesRepository.countRecipesByDateRange(startDate, endDate);
+    }
+    public Map<String, Long> getMonthlyOrWeeklyRecipeCounts(Date start, Date end, String type) {
+        Map<String, Long> counts = new LinkedHashMap<>();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+
+        while (cal.getTime().before(end) || cal.getTime().equals(end)) {
+            Date startDate = cal.getTime();
+            cal.add(type.equals("monthly") ? Calendar.MONTH : Calendar.WEEK_OF_YEAR, 1);
+            cal.add(Calendar.DATE, -1);
+            Date endDate = cal.getTime();
+            long count = getRecipeCountsForInterval(startDate, endDate);
+            String label = new SimpleDateFormat("MMM dd").format(startDate) + " - " + new SimpleDateFormat("MMM dd").format(endDate);
+            counts.put(label, count);
+            cal.add(Calendar.DATE, 1);
+        }
+
+        return counts;
+    }
 }

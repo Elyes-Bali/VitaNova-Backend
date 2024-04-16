@@ -1,5 +1,6 @@
 package tn.esprit.vitanova.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import tn.esprit.vitanova.entities.RecipeDto;
 import tn.esprit.vitanova.services.IRecepiesService;
 import tn.esprit.vitanova.services.RecepiesService;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,7 @@ public class RecipesController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @GetMapping("/ingredients/{ingredientId}")
     public ResponseEntity<List<Recepies>> getAllRecipesWithIngredients(@PathVariable Long ingredientId) {
         List<Recepies> recipes = recipesService.getAllRecipesWithIngredients(ingredientId);
@@ -57,7 +60,7 @@ public class RecipesController {
         recipe.setIdRecepies(id); // Assurez-vous que l'ID de la recette est correct
         recipesService.updateRecipe(recipe);
         System.out.println(recipe.toString());
-         Map<String, String> response = new HashMap<>();
+        Map<String, String> response = new HashMap<>();
         response.put("message", "Recette mise à jour avec succès.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -71,4 +74,37 @@ public class RecipesController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/average-preparation-time")
+    public double getAveragePreparationTime() {
+        return recipesService.calculateAveragePreparationTime();
+    }
+
+    @GetMapping("/most-popular-ingredients")
+    public List<Object[]> getMostPopularIngredients() {
+        return recipesService.findMostPopularIngredients();
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<?> getRecipesStats(
+            @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd") Date start,
+            @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd") Date end,
+            @RequestParam("type") String type) {
+
+        try {
+            type = type.trim();
+            if (!type.equals("monthly") && !type.equals("weekly")) {
+                System.out.println("Trimmed Type: '" + type + "'");
+                throw new IllegalArgumentException("Type must be 'monthly' or 'weekly'");
+            }
+
+            Map<String, Long> stats = recipesService.getMonthlyOrWeeklyRecipeCounts(start, end, type);
+            return ResponseEntity.ok(stats);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            // Log the exception details to help with debugging
+            e.printStackTrace(); // Consider using a logger here
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing your request.");
+        }
+    }
 }

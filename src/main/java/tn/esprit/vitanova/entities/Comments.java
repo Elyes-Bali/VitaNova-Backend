@@ -8,10 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.util.Date;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
@@ -35,11 +35,14 @@ public class Comments implements Serializable {
 
     @NotNull
     private String comment;
-    private Long idOwner;
 
     @ManyToOne
-    @JoinColumn(name = "posts_id_posts")
+    @JoinColumn(name = "posts_id")
     @JsonIgnore
     private Posts posts;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

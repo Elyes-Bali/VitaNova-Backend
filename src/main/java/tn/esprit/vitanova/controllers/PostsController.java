@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.vitanova.entities.Posts;
-import tn.esprit.vitanova.services.CloudinaryServiceImpl;
+import tn.esprit.vitanova.services.CloudinaryService;
 import tn.esprit.vitanova.services.IPostsService;
 
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class PostsController {
 
     private final IPostsService postsService;
-    private final CloudinaryServiceImpl cloudinaryService;
+    private final CloudinaryService cloudinaryService;
 
     @PostMapping("/add")
     @Operation(summary = "Create new post")
@@ -61,7 +61,7 @@ public class PostsController {
     @Operation(summary = "Upload post media")
     public Map<String,String> uploadImage(@RequestPart("file") MultipartFile file) throws Exception {
         Map<String,String> result = new HashMap<>();
-        result.put("url", cloudinaryService.upload(file));
+        result.put("url", cloudinaryService.uploadFile(file));
         return result;
     }
 }

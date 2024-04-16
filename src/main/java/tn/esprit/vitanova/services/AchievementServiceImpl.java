@@ -31,7 +31,6 @@ public class AchievementServiceImpl implements IAchievementService {
         return achievementRepository.findBySlug(slug);
     }
 
-    @Override
     public List<Achievement> getAllAchievements() {
         return achievementRepository.findAll();
     }
@@ -51,7 +50,7 @@ public class AchievementServiceImpl implements IAchievementService {
         }
 
         //check if user already have history with that achievement if yes increment points else create new history
-        Optional<UserAchievementHistory> userAchievementHistory = userAchievementHistoryRepository.findByUser_IdUserAndAchievementSlug(userId, slug);
+        Optional<UserAchievementHistory> userAchievementHistory = userAchievementHistoryRepository.findByUser_IdAndAchievementSlug(userId, slug);
         if (userAchievementHistory.isPresent()) {
             userAchievementHistory.get().setAchievedPoints(userAchievementHistory.get().getAchievedPoints() + 1);
             userAchievementHistory.ifPresent(userAchievementHistoryRepository::save);

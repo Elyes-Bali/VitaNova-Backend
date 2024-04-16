@@ -1,7 +1,6 @@
 package tn.esprit.vitanova.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.vitanova.entities.Ingredients;
 import tn.esprit.vitanova.repository.ProductRepo;
-import tn.esprit.vitanova.services.CloudinaryServiceImpl;
+import tn.esprit.vitanova.services.CloudinaryService;
 import tn.esprit.vitanova.services.IngredientsService;
 
 import java.util.HashMap;
@@ -24,7 +23,7 @@ public class IngredientsController {
 
     private final IngredientsService ingredientsService;
     private final ProductRepo productsRepository;
-    private final CloudinaryServiceImpl cloudinaryService;
+    private final CloudinaryService cloudinaryService;
 
     // Endpoint pour ajouter un ingrédient
     @PostMapping
@@ -91,7 +90,7 @@ public class IngredientsController {
     @PostMapping(value = "/media", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Map<String,String> uploadImage(@RequestPart("file") MultipartFile file) throws Exception {
         Map<String,String> result = new HashMap<>();
-        result.put("url", cloudinaryService.upload(file));
+        result.put("url", cloudinaryService.uploadFile(file));
         return result;
     }
 }

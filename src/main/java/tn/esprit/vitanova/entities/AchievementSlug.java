@@ -2,5 +2,5 @@ package tn.esprit.vitanova.entities;
 
 public enum AchievementSlug {
 
-    ADD_COMMENT, SUBSCRIBE , ADD_COMMENT15
+    ADD_10_COMMENT, SUBSCRIBE , ADD_15_COMMENT
 }
