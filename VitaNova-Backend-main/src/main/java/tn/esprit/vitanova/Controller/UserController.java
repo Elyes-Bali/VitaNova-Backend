@@ -56,4 +56,9 @@ public class UserController {
         List<User> psychiatrists = userService.getUsersWithPsychiatristSpecialty();
         return ResponseEntity.ok(psychiatrists);
     }
+    @GetMapping("/client")
+    public ResponseEntity<List<User>> getUsersWithclientSpecialty() {
+        List<User> psychiatrists = userService.getUsersWithclientSpecialty();
+        return ResponseEntity.ok(psychiatrists);
+    }
 }

@@ -105,23 +105,23 @@ public class controller {
     @GetMapping("/consultation/getall")
             public List<Consultation> getallconsultation(){
         return allservices.getallconsultation();}
-    @GetMapping("/consultation/getconsultationyid/{idconsulation}")
-    public Consultation showconsultation(@PathVariable Long idconsulation){return allservices.showconsultation(idconsulation);}
+    @GetMapping("/consultation/show/{id}")
+    public Consultation showconsultation(@PathVariable Long id){return allservices.showconsultation(id);}
     @DeleteMapping("/consultation/deleteconsultation/{id}")
     public void deleteconsultationbyid(@PathVariable Long id){allservices.deleteconsultationbyid(id);}
-    @GetMapping("/countPerDay/{psychologueId}")
-    public Integer numberconsultation(@PathVariable Long psychologueId) {
-
-        return allservices.numberconsultation(psychologueId);
-    }
-    @GetMapping("/consultation/{psychologueId}/{year}/{month}")
-    public Integer numberConsultationPerMonth(  @PathVariable Long psychologueId,
-                                              @PathVariable int year,
-                                              @PathVariable String month
-    ) {
-        Month monthEnum = Month.valueOf(month.toUpperCase());
-        return  allservices.numberConsultationPerMonth(psychologueId,YearMonth.of(year, monthEnum));
-    }
+//    @GetMapping("/countPerDay/{psychologueId}")
+//    public Integer numberconsultation(@PathVariable Long psychologueId) {
+//
+//        return allservices.numberconsultation(psychologueId);
+//    }
+//    @GetMapping("/consultation/{psychologueId}/{year}/{month}")
+//    public Integer numberConsultationPerMonth(  @PathVariable Long psychologueId,
+//                                              @PathVariable int year,
+//                                              @PathVariable String month
+//    ) {
+//        Month monthEnum = Month.valueOf(month.toUpperCase());
+//        return  allservices.numberConsultationPerMonth(psychologueId,YearMonth.of(year, monthEnum));
+//    }
     @GetMapping("/generate-pdf/{rapportPsyId}")
     public String generatePdf(@PathVariable Long rapportPsyId) {
         allservices.generatePdf(rapportPsyId);
@@ -132,7 +132,8 @@ public class controller {
             @PathVariable Long psychologueId,
             @PathVariable int year,
             @PathVariable String month
-    ) {Month monthEnum = Month.valueOf(month.toUpperCase());
+    ) {
+        Month monthEnum = Month.valueOf(month.toUpperCase());
         YearMonth yearMonth = YearMonth.of(year, monthEnum);
         return allservices.consultationsPerDayInMonth(psychologueId, yearMonth);
     }
@@ -171,16 +172,15 @@ public class controller {
 //    }
 ///////
 
-    @GetMapping("/consultation/slots/{date}/{psychologueid}")
-    public List<LocalTime> getAvailableConsultationSlots(
-            @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-            @PathVariable("psychologueid") Long psychologueId) {
-        return allservices.getAvailableConsultationSlots(date, psychologueId);
-    }
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Consultation>> getConsultationsByUserId(@PathVariable Long userId) {
         List<Consultation> consultations = allservices.getConsultationsByUserId(userId);
         return ResponseEntity.ok(consultations);
+    }
+    @GetMapping("/psychiatrist/{psychiatristId}")
+    public List<RapportPsy> getRapportPsyByPsychiatristId(@PathVariable Long psychiatristId) {
+        return allservices.getRapportPsyByPsychiatristId(psychiatristId);
     }
 
 }

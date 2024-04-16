@@ -1,6 +1,5 @@
 package tn.esprit.vitanova.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -11,6 +10,7 @@ import java.time.LocalTime;
 
 @Entity
 @Data
+
 public class Consultation implements Serializable {
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idConsultation ;
@@ -18,15 +18,13 @@ public class Consultation implements Serializable {
     private LocalTime startTime;
     @Temporal(TemporalType.DATE)
     private LocalDate consultationdate;
-    @JsonIgnoreProperties({"chats", "notifications", "clients","rapportPsy","consultations"})
-    @ManyToOne
-    Psychologue psychologue;
 
-    @JsonIgnore
-    @ManyToOne
+    @JsonIgnoreProperties({"consultationsAsPsychiatrist","consultationsAsClient","psychiatristReports","clientReport"})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "psychiatrist_id")
     private User psychiatrist;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"consultationsAsPsychiatrist","consultationsAsClient","psychiatristReports","clientReport"})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
     private User client;
 

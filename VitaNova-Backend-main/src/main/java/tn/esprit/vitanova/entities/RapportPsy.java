@@ -28,10 +28,12 @@ public class RapportPsy implements Serializable {
 
 
 
-    @JsonIgnoreProperties({"chats", "notifications", "clients","rapportPsy"})
-    @ManyToOne
-    Psychologue psychologue;
-    @JsonIgnoreProperties({"psychologue","rapportPsy"})
-    @OneToOne
-    Client client;
+    @JsonIgnoreProperties({"consultationsAsPsychiatrist","consultationsAsClient","psychiatristReports","clientReport"})
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "psychiatrist_id")
+    private User psychiatrist;
+    @JsonIgnoreProperties({"consultationsAsPsychiatrist","consultationsAsClient","psychiatristReports","clientReport"})
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "client_id")
+    private User clients;
 }

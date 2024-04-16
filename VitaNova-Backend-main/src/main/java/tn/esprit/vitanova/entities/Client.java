@@ -16,10 +16,5 @@ public Long clientId;
     private String email;
     private String phonenumber;
 
-    @ManyToOne
-    Psychologue psychologue;
-
-    @OneToOne (mappedBy = "client")
-    private RapportPsy rapportPsy;
 
 }

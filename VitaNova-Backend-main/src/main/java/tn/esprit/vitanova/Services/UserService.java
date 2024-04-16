@@ -18,4 +18,5 @@ public interface UserService {
 
     long countBannedUsers();
     public List<User> getUsersWithPsychiatristSpecialty();
+    public List<User> getUsersWithclientSpecialty();
 }

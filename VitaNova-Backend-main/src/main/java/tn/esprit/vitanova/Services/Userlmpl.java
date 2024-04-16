@@ -79,6 +79,10 @@ public class Userlmpl implements UserService {
     public List<User> getUsersWithPsychiatristSpecialty() {
         return userRepo.findByRolesName(ERole.ROLE_PSYCOLOGIST);
     }
+    @Override
+    public List<User> getUsersWithclientSpecialty() {
+        return userRepo.findByRolesName(ERole.ROLE_CLIENT);
+    }
 
 
 }

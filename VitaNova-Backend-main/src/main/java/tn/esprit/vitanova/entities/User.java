@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,11 +13,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+@Data
+@Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@Entity
+@AllArgsConstructor
 @Table(	name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username"),
@@ -83,6 +81,7 @@ import java.util.Set;
             this.password = password;
         }
 
+
     @JsonIgnore
     @OneToMany(mappedBy = "psychiatrist", cascade = CascadeType.ALL)
     private List<Consultation> consultationsAsPsychiatrist;
@@ -90,4 +89,11 @@ import java.util.Set;
     @JsonIgnore
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Consultation> consultationsAsClient;
+    @OneToMany(mappedBy = "psychiatrist", cascade = CascadeType.ALL)
+    private List<RapportPsy> psychiatristReports;
+
+    // Association with client report (one-to-one)
+    @OneToOne(mappedBy = "clients")
+    private RapportPsy clientReport;
     }
+
