@@ -59,6 +59,7 @@ import java.util.Set;
         private Boolean activated;
 
         private String activationToken;
+        private Double Rating;
 
         @Column(columnDefinition = "TIMESTAMP")
         private LocalDateTime activationTokenCreationDate;

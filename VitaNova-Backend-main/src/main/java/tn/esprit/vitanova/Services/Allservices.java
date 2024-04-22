@@ -35,6 +35,7 @@ public class Allservices implements Allservicesimpl{
     QuestionRrepo qr;
     AnswersRepo an;
    UserRepo userRepository;
+  FeedbackRepo fp;
 
 
     @Override
@@ -187,6 +188,7 @@ public class Allservices implements Allservicesimpl{
         return null;
     }
 
+
     //    @Override
 //    public Integer numberconsultation(Long psychologueId) {
 //        Psychologue psychologue = pr.findById(psychologueId).orElse(null);
@@ -304,7 +306,42 @@ public class Allservices implements Allservicesimpl{
 
         }
         return con.size();}
+    public List<LocalTime> findAvailableTimeSlots(LocalDate date, Long psychologueid) {
+        List<Consultation> consultations = cr.findByConsultationdateAndUserId(date, psychologueid);
+        List<LocalTime> availableSlots = new ArrayList<>();
 
+        // Define the working hours of the psychiatrist
+        LocalTime startOfWork = LocalTime.of(9, 0); // Start time (e.g., 9:00 AM)
+        LocalTime endOfWork = LocalTime.of(17, 0); // End time (e.g., 5:00 PM)
+
+        // Initialize the current time to the start of the working hours
+        LocalTime currentTime = startOfWork;
+
+        // Iterate through the working hours in one-hour increments
+        while (currentTime.isBefore(endOfWork)) {
+            // Check if the current time slot overlaps with any existing consultations
+            boolean isAvailable = true;
+            for (Consultation consultation : consultations) {
+                LocalTime existingStartTime = consultation.getStartTime();
+                LocalTime existingEndTime = existingStartTime.plusHours(1);
+
+                if (currentTime.isBefore(existingEndTime) && existingStartTime.isBefore(currentTime.plusHours(1))) {
+                    isAvailable = false;
+                    break;
+                }
+            }
+
+            // If the current time slot is available, add it to the list of available slots
+            if (isAvailable) {
+                availableSlots.add(currentTime);
+            }
+
+            // Move to the next time slot
+            currentTime = currentTime.plusHours(1);
+        }
+
+        return availableSlots;
+    }
 
         // Slot does not overlap with any existing consultation for the psychologist
 
@@ -341,6 +378,39 @@ public class Allservices implements Allservicesimpl{
     public List<RapportPsy> getRapportPsyByPsychiatristId(Long psychiatristId) {
         return rapportPsyRepo.findByPsychiatristId(psychiatristId);
     }
+    public List<Feedback> getFeedbackByTherapistId(Long therapistId) {
+        return fp.findByTherapistId(therapistId);
+    }
+
+    public void saveFeedback(Feedback feedback) {
+        // Check if the user has already rated the therapist
+        if (fp.existsByTherapistIdAndUserId(feedback.getTherapist().getId(), feedback.getUser().getId())) {
+            throw new IllegalStateException("User has already rated this therapist.");
+        }
+
+        // Save the feedback
+        Feedback savedFeedback = fp.save(feedback);
+
+        // Calculate average rating for the therapist
+        User therapist = feedback.getTherapist();
+        List<Feedback> therapistFeedbacks = fp.findByTherapistId(therapist.getId());
+        int totalRating = therapistFeedbacks.stream().mapToInt(Feedback::getRating).sum();
+        double averageRating = totalRating / (double) therapistFeedbacks.size();
+        therapist.setRating(averageRating);
+        // Update therapist rating in the database
+        // TherapistService.updateTherapist(therapist); // You need to implement updateTherapist method in TherapistService
+
+    }
+    public double calculateAverageRating(Long therapistId) {
+        List<Feedback> therapistFeedbacks = fp.findByTherapistId(therapistId);
+        int totalRating = therapistFeedbacks.stream().mapToInt(Feedback::getRating).sum();
+        int feedbackCount = therapistFeedbacks.size();
+        if (feedbackCount == 0) {
+            return 0; // Avoid division by zero
+        }
+        return (double) totalRating / feedbackCount;
+    }
+
 
 
 //        public List<String> recommendPsychologists(String genderPreference, char specializeDepression,

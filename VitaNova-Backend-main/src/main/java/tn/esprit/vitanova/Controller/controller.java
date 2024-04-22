@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.vitanova.Services.Allservices;
 import tn.esprit.vitanova.entities.*;
+import tn.esprit.vitanova.repository.UserRepo;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,6 +14,7 @@ import java.time.Month;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -20,6 +22,7 @@ import java.util.Map;
 
 
 public class controller {
+    UserRepo user;
 
     Allservices allservices;
 
@@ -181,6 +184,43 @@ public class controller {
     @GetMapping("/psychiatrist/{psychiatristId}")
     public List<RapportPsy> getRapportPsyByPsychiatristId(@PathVariable Long psychiatristId) {
         return allservices.getRapportPsyByPsychiatristId(psychiatristId);
+    }
+    @GetMapping("/{psychologistId}/{date}")
+    public ResponseEntity<List<LocalTime>> getPsychiatristAvailability(
+            @PathVariable("psychologistId") Long psychologistId,
+            @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+
+        Optional<User> psychiatrist = user.findById(psychologistId);
+        if (psychiatrist.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<LocalTime> availableTimeSlots = allservices.findAvailableTimeSlots(date, psychologistId);
+
+        return ResponseEntity.ok(availableTimeSlots);
+    }
+    @GetMapping("/questions")
+    public List<Question> getQuestions() {
+        return allservices.allquestion();
+    }
+
+    @GetMapping("/therapist/{therapistId}")
+    public ResponseEntity<List<Feedback>> getFeedbackByTherapistId(@PathVariable Long therapistId) {
+        List<Feedback> feedbackList = allservices.getFeedbackByTherapistId(therapistId);
+        return ResponseEntity.ok(feedbackList);
+    }
+
+    @PostMapping("rating")
+    public void saveFeedback(@RequestBody Feedback feedback) {
+
+            allservices.saveFeedback(feedback);}
+
+
+
+    @GetMapping("/{therapistId}/average-rating")
+    public ResponseEntity<Double> getAverageRating(@PathVariable Long therapistId) {
+        double averageRating = allservices.calculateAverageRating(therapistId);
+        return ResponseEntity.ok(averageRating);
     }
 
 }
