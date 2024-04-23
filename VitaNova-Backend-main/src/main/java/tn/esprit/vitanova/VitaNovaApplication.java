@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @ComponentScan(basePackages = {"tn.esprit.vitanova"})
 @EntityScan(basePackages = {"tn.esprit.vitanova.entities"})
 @EnableJpaRepositories(basePackages = {"tn.esprit.vitanova.repository"})
+
 public class VitaNovaApplication {
 
     public static void main(String[] args) {

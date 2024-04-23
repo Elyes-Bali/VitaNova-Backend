@@ -20,7 +20,7 @@ public interface ConsultationRepo extends JpaRepository<Consultation,Long> {
   List<Consultation> findByPsychiatrist(User psy);
   @Query("SELECT c FROM Consultation c WHERE c.consultationdate = :date AND c.psychiatrist.id = :userId")
   List<Consultation> findByConsultationdateAndUserId(@Param("date") LocalDate date, @Param("userId") Long userId);
-
+  long  countByConsultationdateAfter(LocalDate date);
 
 }
 

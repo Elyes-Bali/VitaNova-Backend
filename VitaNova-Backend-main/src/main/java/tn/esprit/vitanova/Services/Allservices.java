@@ -7,6 +7,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import tn.esprit.vitanova.entities.*;
@@ -15,6 +16,7 @@ import tn.esprit.vitanova.repository.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.*;
@@ -466,7 +468,16 @@ public class Allservices implements Allservicesimpl{
         return totalConsultationsPerPsychiatrist;
     }
 
+    @Scheduled(fixedRate = 24 * 60 * 60 * 1000) // Execute every 24 hours
+    public void countConsultationsAndPrint() {
+        long consultationCount = countConsultationsWithinLast24Hours();
+        System.out.println("Number of consultations in the last 24 hours: " + consultationCount);
+    }
 
+    public long countConsultationsWithinLast24Hours() {
+        LocalDate twentyFourHoursAgo = LocalDate.now().minusDays(1);
+        return cr.countByConsultationdateAfter(twentyFourHoursAgo);
+    }
 //    public List<Consultation>getshit(Long id){
 //        List<Consultation> consultations = cr.findByPsychiatristId(id);
 //        return  consultations;
