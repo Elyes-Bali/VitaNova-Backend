@@ -29,4 +29,5 @@ public class Consultation implements Serializable {
     private User client;
 
 
+
 }

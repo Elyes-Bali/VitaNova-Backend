@@ -96,5 +96,6 @@ import java.util.Set;
     // Association with client report (one-to-one)
     @OneToOne(mappedBy = "clients")
     private RapportPsy clientReport;
+
     }
 

@@ -2,6 +2,7 @@ package tn.esprit.vitanova.Controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.vitanova.Services.Allservices;
@@ -223,6 +224,36 @@ public class controller {
         return ResponseEntity.ok(averageRating);
     }
 
+    @GetMapping("/{rapportPsyId}/feelings")
+    public ResponseEntity<List<String>> extractFeelingsFromRapport(@PathVariable Long rapportPsyId) {
+        List<String> feelings = allservices.extractFeelingsFromRapport(rapportPsyId);
+        return ResponseEntity.ok(feelings);
+    }
+//  @GetMapping("/{id}")
+//  public List<Consultation>getshit(@PathVariable Long id){
+//        return allservices.getshit(id);
+//  }
+@GetMapping("/psychiatrist/{psychiatristId}/consultationCountPerClient")
+public ResponseEntity<Map<String, Long>> getConsultationCountPerClientForPsychiatrist(@PathVariable Long psychiatristId) {
+    Map<String, Long> consultationCountPerClient = allservices.getConsultationCountPerClientForPsychiatrist(psychiatristId);
+    if (consultationCountPerClient == null) {
+        // Handle the case where psychiatrist with given ID is not found
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    return ResponseEntity.ok(consultationCountPerClient);
 }
+    @GetMapping("/totalConsultationsPerPsychiatrist")
+    public ResponseEntity<Map<String, Long>> getTotalConsultationsPerPsychiatrist() {
+        Map<String, Long> totalConsultationsPerPsychiatrist = allservices.getTotalConsultationsPerPsychiatrist();
+        if (totalConsultationsPerPsychiatrist == null) {
+            // Handle the case where data is not available
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(totalConsultationsPerPsychiatrist);
+    }
+
+}
+
+
 
 

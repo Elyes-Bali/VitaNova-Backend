@@ -23,6 +23,7 @@ public class RapportPsy implements Serializable {
     private Long idRapportPsy; // Clé primaire
 
     private String description;
+    private String summary ;
     @Temporal(TemporalType.DATE)
     private Date dateRappPs;
 

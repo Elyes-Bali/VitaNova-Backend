@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import tn.esprit.vitanova.entities.Consultation;
+import tn.esprit.vitanova.entities.User;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +17,7 @@ public interface ConsultationRepo extends JpaRepository<Consultation,Long> {
 //    @Query("SELECT c.startTime FROM Consultation c WHERE c.consultationdate = :date AND c.psychologue.psychologueId= :psychologueId")
 //    List<LocalTime> findStartTimesByDateAndPsychologueId(@Param("date") LocalDate date, @Param("psychologueId") Long psychologueId);
   List<Consultation> findByClientId(Long clientId);
+  List<Consultation> findByPsychiatrist(User psy);
   @Query("SELECT c FROM Consultation c WHERE c.consultationdate = :date AND c.psychiatrist.id = :userId")
   List<Consultation> findByConsultationdateAndUserId(@Param("date") LocalDate date, @Param("userId") Long userId);
 

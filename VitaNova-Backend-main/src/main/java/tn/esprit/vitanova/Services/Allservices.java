@@ -410,8 +410,85 @@ public class Allservices implements Allservicesimpl{
         }
         return (double) totalRating / feedbackCount;
     }
+    public List<String> extractFeelingsFromRapport(Long rapportPsyId) {
+        List<String> feelings = new ArrayList<>();
+
+        // Define a list of feeling-related words
+        List<String> feelingWords = Arrays.asList("sad", "happy", "depressed", "joyful", "anxious", "content", "angry");
+
+        // Retrieve the RapportPsy entity from the database
+        Optional<RapportPsy> rapportOptional = rapportPsyRepo.findById(rapportPsyId);
+
+        if (rapportOptional.isPresent()) {
+            RapportPsy rapportPsy = rapportOptional.get();
+
+            // Extract feelings from the description
+            String description = rapportPsy.getDescription();
+            String[] words = description.toLowerCase().split("\\s+");
+
+            // Check if each word is a feeling word
+            for (String word : words) {
+                if (feelingWords.contains(word)) {
+                    feelings.add(word);
+                }
+            }
+        }
+
+        return feelings;
+    }
+    public Map<String, Long> getConsultationCountPerClientForPsychiatrist(Long psychiatristId) {
+        User psychiatrist = userRepository.findById(psychiatristId).orElse(null);
+        if (psychiatrist == null) {
+            // Handle the case where psychiatrist with given ID is not found
+            return null;
+        }
+
+        List<Consultation> consultations = cr.findByPsychiatrist(psychiatrist);
+        Map<String, Long> consultationCountPerClient = new HashMap<>();
+
+        for (Consultation consultation : consultations) {
+            String clientUsername = consultation.getClient().getUsername();
+            consultationCountPerClient.put(clientUsername, consultationCountPerClient.getOrDefault(clientUsername, 0L) + 1);
+        }
+
+        return consultationCountPerClient;
+    }
+
+    public Map<String, Long> getTotalConsultationsPerPsychiatrist() {
+        List<Consultation> consultations = cr.findAll();
+        Map<String, Long> totalConsultationsPerPsychiatrist = new HashMap<>();
+
+        for (Consultation consultation : consultations) {
+            String psychiatristUsername = consultation.getPsychiatrist().getUsername();
+            totalConsultationsPerPsychiatrist.put(psychiatristUsername, totalConsultationsPerPsychiatrist.getOrDefault(psychiatristUsername, 0L) + 1);
+        }
+
+        return totalConsultationsPerPsychiatrist;
+    }
 
 
+//    public List<Consultation>getshit(Long id){
+//        List<Consultation> consultations = cr.findByPsychiatristId(id);
+//        return  consultations;
+//    }
+
+//    public static Map<LocalDate, Integer> calculateBusiestConsultationDays(User psychiatrist) {
+//        Map<LocalDate, Integer> consultationCountByDay = new HashMap<>();
+//        List<Consultation> consultations = psychiatrist.getConsultationsAsPsychiatrist();
+//
+//        for (Consultation consultation : consultations) {
+//            LocalDate consultationDate = consultation.getConsultationdate();
+//            consultationCountByDay.put(consultationDate, consultationCountByDay.getOrDefault(consultationDate, 0) + 1);
+//        }
+//
+//        // Sort the map by consultation count in descending order
+//        Map<LocalDate, Integer> busiestDays = consultationCountByDay.entrySet()
+//                .stream()
+//                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+//
+//        return busiestDays;
+//    }
 
 //        public List<String> recommendPsychologists(String genderPreference, char specializeDepression,
 //                                                   char specializeRelationship, char specializeAnxiety) {
