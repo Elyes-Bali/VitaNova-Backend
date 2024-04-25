@@ -16,7 +16,6 @@ import tn.esprit.vitanova.repository.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.*;
@@ -376,6 +375,9 @@ public class Allservices implements Allservicesimpl{
     @Override
     public List<Consultation> getConsultationsByUserId(Long userId) {
         return cr.findByClientId(userId);
+    }
+    public List<Consultation> getConsultationsBypsyId(Long userId) {
+        return cr.findByPsychiatristId(userId);
     }
     public List<RapportPsy> getRapportPsyByPsychiatristId(Long psychiatristId) {
         return rapportPsyRepo.findByPsychiatristId(psychiatristId);

@@ -182,6 +182,11 @@ public class controller {
         List<Consultation> consultations = allservices.getConsultationsByUserId(userId);
         return ResponseEntity.ok(consultations);
     }
+    @GetMapping("/psy/{userId}")
+    public ResponseEntity<List<Consultation>> getConsultationsBypsyId(@PathVariable Long userId) {
+        List<Consultation> consultations = allservices.getConsultationsBypsyId(userId);
+        return ResponseEntity.ok(consultations);
+    }
     @GetMapping("/psychiatrist/{psychiatristId}")
     public List<RapportPsy> getRapportPsyByPsychiatristId(@PathVariable Long psychiatristId) {
         return allservices.getRapportPsyByPsychiatristId(psychiatristId);

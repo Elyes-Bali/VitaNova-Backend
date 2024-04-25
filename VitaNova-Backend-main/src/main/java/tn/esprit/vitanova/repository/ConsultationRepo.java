@@ -18,6 +18,7 @@ public interface ConsultationRepo extends JpaRepository<Consultation,Long> {
 //    List<LocalTime> findStartTimesByDateAndPsychologueId(@Param("date") LocalDate date, @Param("psychologueId") Long psychologueId);
   List<Consultation> findByClientId(Long clientId);
   List<Consultation> findByPsychiatrist(User psy);
+  List<Consultation> findByPsychiatristId(Long id);
   @Query("SELECT c FROM Consultation c WHERE c.consultationdate = :date AND c.psychiatrist.id = :userId")
   List<Consultation> findByConsultationdateAndUserId(@Param("date") LocalDate date, @Param("userId") Long userId);
   long  countByConsultationdateAfter(LocalDate date);
