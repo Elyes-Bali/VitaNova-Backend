@@ -31,6 +31,7 @@ public class AchievementServiceImpl implements IAchievementService {
         return achievementRepository.findBySlug(slug);
     }
 
+    @Override
     public List<Achievement> getAllAchievements() {
         return achievementRepository.findAll();
     }

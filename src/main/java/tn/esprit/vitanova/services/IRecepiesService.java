@@ -18,4 +18,6 @@ public interface IRecepiesService {
     List<Object[]> findMostPopularIngredients();
     long getRecipeCountsForInterval(Date startDate, Date endDate);
     Map<String, Long> getMonthlyOrWeeklyRecipeCounts(Date start, Date end, String type);
+    List<Object[]> getRecepiesStatsByDishType();
+    List<Object[]> getRecepiesStatsByDuration();
 }

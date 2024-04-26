@@ -22,7 +22,12 @@ public class Recepies implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idRecepies")
     private Long idRecepies; // Clé primaire
-    private Date datePreparation;
+    private double duration;
+    // Durée de préparation en minutes (double pour inclure des demi-minutes si nécessaire)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "dish_type_id")
+    private DishType dishType; // Référence à l'entité DishType
+
     private Date dateAdded;
     @Column(length = 1000) // Définir une taille de colonne de 1000 caractères pour la description
     private String description;

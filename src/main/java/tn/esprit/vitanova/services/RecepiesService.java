@@ -36,7 +36,8 @@ public class RecepiesService  implements IRecepiesService  {
         recipe.setDescription(recipeDto.getDescription());
         recipe.setName(recipeDto.getName());
         recipe.setDateAdded(recipeDto.getDateAdded());
-        recipe.setDatePreparation(recipeDto.getDatePreparation());
+        recipe.setDuration(recipeDto.getDuration());
+        recipe.setDishType(recipeDto.getDishType());
 
 
         recipe.setImages(recipeDto.getImages());
@@ -68,6 +69,11 @@ public class RecepiesService  implements IRecepiesService  {
     }
 
     @Override
+    public double calculateAveragePreparationTime() {
+        return 0;
+    }
+
+    @Override
     public  Recepies getRecipeById(Long id) {
         return recipesRepository.findById(id).orElse(null);
     }
@@ -96,12 +102,12 @@ public class RecepiesService  implements IRecepiesService  {
             // Par exemple, vous pouvez lever une exception ou enregistrer un message d'erreur
         }
     }
-    public double calculateAveragePreparationTime() {
-        List<Recepies> recipes = recipesRepository.findAll();
-        double totalTime = recipes.stream()
-                .mapToLong(recipe -> recipe.getDatePreparation().getTime())
-                .sum();
-        return recipes.size() > 0 ? totalTime / recipes.size() : 0;
+    public List<Object[]> getRecepiesStatsByDishType() {
+        return recipesRepository.countRecepiesByDishType();
+    }
+
+    public List<Object[]> getRecepiesStatsByDuration() {
+        return recipesRepository.countRecepiesByDuration();
     }
     public List<Object[]> findMostPopularIngredients() {
         return recipesRepository.findMostPopularIngredients();

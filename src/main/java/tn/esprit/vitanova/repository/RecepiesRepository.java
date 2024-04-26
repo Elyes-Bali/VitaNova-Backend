@@ -18,5 +18,10 @@ public interface RecepiesRepository  extends JpaRepository<Recepies,Long> {
     List<Object[]> findMostPopularIngredients();
     @Query("SELECT COUNT(r) FROM Recepies r WHERE r.dateAdded BETWEEN :startDate AND :endDate")
     long countRecipesByDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    @Query("SELECT dt.name, COUNT(r) FROM Recepies r JOIN r.dishType dt GROUP BY dt.name")
+    List<Object[]> countRecepiesByDishType();
 
+    // Statistiques pour le graphique en secteurs de la durée de préparation
+    @Query("SELECT r.duration, COUNT(r) FROM Recepies r GROUP BY r.duration ORDER BY r.duration")
+    List<Object[]> countRecepiesByDuration();
 }

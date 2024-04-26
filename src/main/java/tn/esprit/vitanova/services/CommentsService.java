@@ -18,9 +18,14 @@ import tn.esprit.vitanova.repository.UserRepository;
 import tn.esprit.vitanova.security.services.UserDetailsImpl;
 
 import java.util.List;
-
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 @Service
 @RequiredArgsConstructor
+
+@Component
+
+
 public class CommentsService implements ICommentsService {
 
     private final PostsRepository postsRepository;

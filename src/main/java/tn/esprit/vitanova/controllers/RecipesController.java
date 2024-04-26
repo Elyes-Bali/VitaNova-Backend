@@ -107,4 +107,13 @@ public class RecipesController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while processing your request.");
         }
     }
+    @GetMapping("/stats/dish-types")
+    public List<Object[]> getRecepiesStatsByDishType() {
+        return recipesService.getRecepiesStatsByDishType();
+    }
+
+    @GetMapping("/stats/durations")
+    public List<Object[]> getRecepiesStatsByDuration() {
+        return recipesService.getRecepiesStatsByDuration();
+    }
 }
