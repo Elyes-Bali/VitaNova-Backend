@@ -1,9 +1,7 @@
 package tn.esprit.vitanova.Services;
 
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +16,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.YearMonth;
+import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -158,7 +157,13 @@ public class Allservices implements Allservicesimpl{
 
     @Override
     public Consultation addconsultation(Consultation consultation) {
-   return cr.save(consultation);
+        Integer availability = isConsultationSlotAvailable(consultation.getConsultationdate(), consultation.getStartTime(), consultation.getPsychiatrist().getId());
+
+        if (availability.equals(0)) {
+            return cr.save(consultation);
+        } else {
+            throw new IllegalArgumentException("Cannot add consultation. The slot is not available.");
+        }
     }
 
     @Override
@@ -228,17 +233,46 @@ public class Allservices implements Allservicesimpl{
         if (rapportPsyOptional.isPresent()) {
             RapportPsy rapportPsy = rapportPsyOptional.get();
             try {
+
                 Document document = new Document();
                 PdfWriter.getInstance(document, new FileOutputStream("rapport_psy.pdf"));
                 document.open();
+                Image image = Image.getInstance("D:\\downloads\\im.jpg");
+                image.scaleToFit(100, 100); // Adjust width and height as needed
+                image.setAlignment(Element.ALIGN_TOP | Element.ALIGN_RIGHT);
+                document.add(image);
 
                 // Add content to the PDF
-                document.add(new Paragraph("Rapport Psy"));
-                document.add(new Paragraph("psychologue: " + rapportPsy.getPsychiatrist().getNom()));
+                // Rapport Psy title with big font and centered alignment
+                Paragraph rapportPsyTitle = new Paragraph("Rapport Psy", FontFactory.getFont(FontFactory.HELVETICA, 24, Font.BOLD));
+                rapportPsyTitle.setAlignment(Element.ALIGN_CENTER);
+                document.add(rapportPsyTitle);
 
-                document.add(new Paragraph("client: " + rapportPsy.getClients().getNom()));
-                document.add(new Paragraph("Description: " + rapportPsy.getDescription()));
-                document.add(new Paragraph("Date: " + rapportPsy.getDateRappPs()));
+                // Add empty line for spacing
+                for (int i = 0; i < 8; i++) {
+                document.add(new Paragraph("\n"));}
+                document.add(new Paragraph("Date: " + rapportPsy.getDateRappPs(), FontFactory.getFont(FontFactory.HELVETICA, 14)));
+
+                // Rest of the elements with medium font and left alignment
+                document.add(new Paragraph("psychologue: " + rapportPsy.getPsychiatrist().getUsername(), FontFactory.getFont(FontFactory.HELVETICA, 14)));
+                document.add(new Paragraph("client: " + rapportPsy.getClients().getUsername(), FontFactory.getFont(FontFactory.HELVETICA, 14)));
+                for (int i = 0; i < 2; i++) {
+                    document.add(new Paragraph("\n"));}
+                document.add(new Paragraph("" + rapportPsy.getDescription(), FontFactory.getFont(FontFactory.HELVETICA, 14)));
+                for (int i = 0; i < 2; i++) {
+                    document.add(new Paragraph("\n"));}
+
+                document.add(new Paragraph("most frequent emotions : " + extractFeelingsFromRapport(rapportPsyId), FontFactory.getFont(FontFactory.HELVETICA, 14)));
+
+                Image signatureImage = Image.getInstance("D:\\downloads\\im.png");
+                signatureImage.scaleToFit(100, 100); // Adjust width and height as needed
+
+// Calculate the position of the bottom right corner
+                float x = document.right() - signatureImage.getScaledWidth();
+                float y = document.bottom();
+
+                signatureImage.setAbsolutePosition(x, y);
+                document.add(signatureImage);
 
                 document.close();
             } catch (DocumentException | IOException e) {
