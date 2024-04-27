@@ -129,7 +129,7 @@ public class controller {
     @GetMapping("/generate-pdf/{rapportPsyId}")
     public String generatePdf(@PathVariable Long rapportPsyId) {
         allservices.generatePdf(rapportPsyId);
-        return "PDF generated successfully";
+        return "PDF generated successfully mate";
     }
     @GetMapping("/consultations/{psychologueId}/{year}/{month}")
     public Map<LocalDate, Integer> consultationsPerDayInMonth(

@@ -279,7 +279,7 @@ public class Allservices implements Allservicesimpl{
                 e.printStackTrace();
             }
         } else {
-            throw new IllegalArgumentException("RapportPsy not found with ID: " + rapportPsyId);
+            throw new IllegalArgumentException("RapportPsy not found with id: " + rapportPsyId);
         }
     }
 
