@@ -11,6 +11,7 @@ import tn.esprit.vitanova.services.IProductservice;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -57,7 +58,30 @@ public class ProductController {
         return product;
 
     }
+    @GetMapping("/countByTypeProd")
+    public Map<ProductType, Long> countProductsByTypeProd() {
+        return productservice.countProductsByTypeProd();
+    }
 
+    @GetMapping("/sumPriceByTypeProd")
+    public Map<ProductType, Long> calculateTotalPriceByTypeProd() {
+        return productservice.calculateTotalPriceByTypeProd();
+    }
+//    @GetMapping("/shouldIncrease/{idProducts}")
+//    public boolean shouldIncreaseQuantity(@PathVariable Long idProducts) {
+//        return productservice.shouldIncreaseQuantity(idProducts);
+//    }
+@PostMapping("/sellProduct/{idProducts}")
+public void sellProduct(@PathVariable Long idProducts, @RequestParam int quantitySold) {
+    productservice.sellProduct(idProducts, quantitySold);
+}
+    @PostMapping("/check-quantity")
+    public void triggerQuantityCheck() {
+        productservice.checkQuantity();
+    }
 
-
+    @PostMapping("/checkAndNotifyQuantity")
+    public void checkAndNotifyQuantity() {
+        productservice.checkAndNotifyQuantity();
+    }
 }

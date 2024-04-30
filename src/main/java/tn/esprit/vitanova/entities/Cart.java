@@ -21,6 +21,7 @@ public class Cart implements Serializable {
     @Column(name="idCart")
     private Long idCart; // Clé primaire
     private Long ownerId;
+    private Long idProducts;
     private String products;
     private Long quantity;
     private Long total;

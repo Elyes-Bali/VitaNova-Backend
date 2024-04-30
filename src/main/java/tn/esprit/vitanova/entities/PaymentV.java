@@ -20,8 +20,10 @@ public class PaymentV implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idPaymentV")
     private Long idPaymentV; // Clé primaire
-    private Long OwnerId;
-    private Long TotalPrice;
-    private String Object;
+    private Long totalPrice;
+    private String object;
+
+    @OneToOne(mappedBy = "paymentV")
+    private PremuimV  premuimV;
 
 }

@@ -54,4 +54,11 @@ public class CartService implements ICartService{
     public List<Cart> getCartByOwnerId(Long ownerId) {
         return cartRepo.findByOwnerId(ownerId);
     }
+
+    @Override
+    public double getTotalCombinedPriceByOwnerId(Long ownerId) {
+        List<Cart> carts = cartRepo.findByOwnerId(ownerId);
+        double total = carts.stream().mapToDouble(Cart::getTotal).sum();
+        return total;
+    }
 }

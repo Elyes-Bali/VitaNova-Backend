@@ -20,10 +20,16 @@ public class PremuimV implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idPremuimV")
     private Long idPremuimV; // Clé primaire
-    private Long OwnerId;
     @Temporal(TemporalType.DATE)
-    private Date ExpirationDate;
+    private Date expirationDate;
     @Temporal(TemporalType.DATE)
-    private Date StartingDate;
-    private Long Price;
+    private Date startingDate;
+    private Long price;
+
+    @OneToOne(mappedBy = "premuimV")
+    private User user;
+
+    @OneToOne
+    private PaymentV paymentV;
+
 }

@@ -19,6 +19,7 @@ public class Quotes implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idQuotes")
     private Long idQuotes; // Clé primaire
-    private String DescriptionQuotes;
-
+    private String quoteTitle;
+    private String descriptionQuotes;
+    private int rate;
 }

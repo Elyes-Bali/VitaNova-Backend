@@ -1,5 +1,6 @@
 package tn.esprit.vitanova.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,4 +25,8 @@ public class Ingredients implements Serializable {
     private String description;
     private String Products;
     private String images;
+
+    @ManyToMany(mappedBy = "ingredients", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Recepies> recipes = new HashSet<>();
 }

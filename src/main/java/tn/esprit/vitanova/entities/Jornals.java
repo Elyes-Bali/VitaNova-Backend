@@ -21,4 +21,7 @@ public class Jornals implements Serializable {
     private Long idJornals; // Clé primaire
     private String descriptionJ;
 
+    @OneToOne(mappedBy = "jornals")
+    private User user;
+
 }

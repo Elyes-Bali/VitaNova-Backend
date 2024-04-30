@@ -13,4 +13,5 @@ public interface ICartService {
     void supprimerprodCart(Long idCart);
     Cart getCartId(Long idCart);
     List<Cart> getCartByOwnerId(Long ownerId);
+    double getTotalCombinedPriceByOwnerId(Long ownerId);
 }
