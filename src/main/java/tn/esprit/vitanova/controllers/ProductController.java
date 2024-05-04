@@ -72,8 +72,8 @@ public class ProductController {
 //        return productservice.shouldIncreaseQuantity(idProducts);
 //    }
 @PostMapping("/sellProduct/{idProducts}")
-public void sellProduct(@PathVariable Long idProducts, @RequestParam int quantitySold) {
-    productservice.sellProduct(idProducts, quantitySold);
+public void sellProduct(@PathVariable Long idProducts, @RequestParam int quantitySold,@RequestParam Long buyerId) {
+    productservice.sellProduct(idProducts, quantitySold, buyerId);
 }
     @PostMapping("/check-quantity")
     public void triggerQuantityCheck() {

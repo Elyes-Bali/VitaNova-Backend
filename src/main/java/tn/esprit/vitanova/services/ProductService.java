@@ -9,6 +9,8 @@ import tn.esprit.vitanova.entities.Products;
 import tn.esprit.vitanova.entities.Sale;
 import tn.esprit.vitanova.repository.ProductRepo;
 import tn.esprit.vitanova.repository.SaleRepo;
+import tn.esprit.vitanova.repository.UserRepo;
+import tn.esprit.vitanova.security.services.UserDetailsImpl;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +22,7 @@ import java.util.Map;
 @Slf4j
 public class ProductService implements IProductservice{
     ProductRepo productRepo;
+    UserRepo user;
     public static final int THRESHOLD_QUANTITY = 10;
     private static final double  THRESHOLD_PERCENTAGE =  0.7; // 20% increase threshold
     private SaleRepo saleRepo;
@@ -81,15 +84,16 @@ public class ProductService implements IProductservice{
     }
 
     @Override
-    public void sellProduct(Long idProducts, int quantitySold) {
+    public void sellProduct(Long idProducts, int quantitySold, Long buyerId) {
         Products product = productRepo.findById(idProducts).orElse(null);
+
         if (product != null && product.getQuantityP() >= quantitySold) {
             // Create Sale entity
             Sale sale = new Sale();
             sale.setProduct(product);
             sale.setQuantitySold(quantitySold);
             sale.setSaleDate(new Date()); // Set current time as sale date
-
+            sale.setBuyerId(buyerId);
             // Decrease quantity sold from total quantity
             product.setQuantityP(product.getQuantityP() - quantitySold);
             productRepo.save(product);

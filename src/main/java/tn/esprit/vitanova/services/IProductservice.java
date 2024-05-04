@@ -22,7 +22,7 @@ public interface IProductservice {
 //     boolean shouldIncreaseQuantity(Long idProducts);
 //     int calculateIncreasePercentage(int thisMonthQuantity, int lastMonthQuantity);
 
-     void sellProduct(Long idProducts, int quantitySold);
+     void sellProduct(Long idProducts, int quantitySold, Long buyerId);
      void checkQuantity();
      void checkAndNotifyQuantity();
 }

@@ -15,4 +15,5 @@ public class Sale implements Serializable {
     private int quantitySold;
     @Temporal(TemporalType.TIMESTAMP)
     private Date saleDate; // Date of the sale
+    private Long buyerId;
 }
